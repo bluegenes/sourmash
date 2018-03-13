@@ -2,16 +2,15 @@
 
 set -e -x
 
-PYTHON_VERSION=${1:-py36}
+PYTHON_VERSION=py37
 
-# Compile wheels
-for PYBIN in /opt/python/*/bin; do
-    if [[ "${PYBIN}" == *"cp${PYTHON_VERSION:2:2}"* ]]; then
-        "${PYBIN}/pip" install Cython
-        "${PYBIN}/pip" wheel /io/ -w wheels/
-        rm -rf /io/build /io/*.egg-info
-    fi
-done
+curl https://sh.rustup.rs -sSf | sh -s -- -y
+source $HOME/.cargo/env
+
+# Compile wheel
+PYBIN="/opt/python/cp37-cp37m/bin"
+"${PYBIN}/pip" wheel /io/ -w wheels/
+rm -rf /io/build /io/*.egg-info
 
 # Bundle external shared libraries into the wheels
 for whl in wheels/sourmash*.whl; do

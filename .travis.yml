@@ -38,15 +38,14 @@ matrix:
     env:
     - TOX_ENV=py37
 install:
+- curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain stable
+- export PATH="$HOME/.cargo/bin:$PATH"
+- rustc -V
 - pip install tox
 - sudo snap install ipfs
 script:
 - "/snap/bin/ipfs daemon --init --offline &>/dev/null &"
 - tox -e $TOX_ENV
-before_deploy:
-- git clean -xfd
-- docker run --rm -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 $PRE_CMD /io/.travis/build-wheels.sh
-  $TOX_ENV
 deploy:
   provider: releases
   api_key:
@@ -54,5 +53,6 @@ deploy:
   file_glob: true
   file: dist/sourmash*.whl
   skip_cleanup: true
+  shell: docker run --rm -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 /io/.travis/build-wheels.sh
   on:
     tags: true
