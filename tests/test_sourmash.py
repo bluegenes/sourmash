@@ -655,7 +655,7 @@ def test_do_basic_compare():
         sigs = []
         for fn in testsigs:
             sigs.append(sourmash_lib.load_one_signature(fn, ksize=21,
-                                                        select_moltype='dna'))
+                                                        select_moltype='DNA'))
 
         cmp_calc = numpy.zeros([len(sigs), len(sigs)])
         for i, si in enumerate(sigs):
@@ -3410,7 +3410,7 @@ def test_license_cc0():
         sig = next(signature.load_signatures(sigfile))
         assert sig.name().endswith('short.fa')
 
-        assert sig.d['license'] == 'CC0'
+        assert sig.license == 'CC0'
 
 
 def test_license_non_cc0():
